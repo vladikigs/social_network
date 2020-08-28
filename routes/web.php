@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,11 +12,17 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::routes();
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Route::get('/profile/{id}', 'ProfileController@index');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::match(['get', 'post'], '/addComment/{userPageId}', 'CommentController@form');
+
+
+// Route::get('/home/{name?}', function ($name) {
+//     echo $name;
+//   });
