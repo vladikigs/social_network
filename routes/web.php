@@ -20,9 +20,11 @@ Route::get('/', function () {
 
 Route::get('/profile/{id}', 'ProfileController@index');
 
-Route::match(['get', 'post'], '/addComment/{userPageId}', 'CommentController@form');
+Route::match(['get', 'post'], '/addComment/{userPageId}', 'CommentController@addComment');
 
+Route::get('/deleteAllComments', 'CommentController@deleteAllComments');
 
+Route::get('/deleteComment/{idComment}/{idPageRefrash}', 'CommentController@deleteComment');
 // Route::get('/home/{name?}', function ($name) {
 //     echo $name;
 //   });

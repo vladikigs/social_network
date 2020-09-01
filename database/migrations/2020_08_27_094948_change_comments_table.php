@@ -15,7 +15,7 @@ class ChangeCommentsTable extends Migration
     {
         Schema::table('comments', function (Blueprint $table) {
             //
-            $table->bigInteger('comment_id');
+            $table->bigInteger('comment_id')->nullable();
             $table->bigInteger('author_user_id');
         });
     }

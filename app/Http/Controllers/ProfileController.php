@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Comment;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -25,16 +26,10 @@ class ProfileController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($id)
+    public function index(Int $id)
     {
-        
-        $username = User::find($id);
-
-        $comments = DB::table('comments')
-            ->leftJoin('users', 'users.id', '=', 'comments.author_user_id')
-            ->where('user_id_wall', $id)
-            ->get();
-        
-        return view('home')->with('username', $username->name)->with('user_id', $id)->with('comments', $comments);
+        return view('home')->with('user_id', $id)->with('user', User::getUserData($id));
     }
+
+    
 }

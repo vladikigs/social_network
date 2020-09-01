@@ -36,4 +36,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function comment()
+    {
+       return $this->hasMany(Comment::class, 'user_id_wall', 'id');
+    }
+
+    public static function getUserData(Int $id)
+    {
+        return $user = User::find($id);
+        
+    }
 }

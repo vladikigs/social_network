@@ -25,19 +25,27 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function form(Request $request, $userPageId)
+    public function addComment(Request $request, $userPageId)
     {
         $titleComment = $request->input('titleComment');
         $textComment = $request->input('textComment');
-
-        $comment = new Comment;
-        $comment->title = $titleComment;
-        $comment->comment_text = $textComment;
-        $comment->author_user_id = Auth::user()->id;
-        $comment->user_id_wall = $userPageId;
-        $comment->save();
+        Comment::addCommentOnPage($titleComment, $textComment, Auth::user()->id, $userPageId);
         
         return redirect()->action('ProfileController@index', ['id' => $userPageId]);
         
+    }
+
+    public function deleteComment($idComment, $idPageRefrash)
+    {
+        Comment::deleteComment($idComment);
+        return redirect()->action('ProfileController@index', ['id' => $idPageRefrash]);
+    }
+
+    public function deleteAllComments()
+    {
+        $id = Auth::user()->id;
+        
+        Comment::deleteAllComments($id);
+        return redirect()->action('ProfileController@index', ['id' => $id]);
     }
 }
