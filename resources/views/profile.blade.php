@@ -10,7 +10,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Это стена пользователя ') }}  {{ $user->name }}</div>
-                
+                <script src="{{ asset('js/loaderComments.js') }}" defer></script>
                 
 
                 <div class="card-body">
@@ -53,12 +53,16 @@
                         </form>
                     @endif
                     
-                            
-                    <div class="media-block">
+                    <script>
+                        var idUserPage =  {{ $user->id }} ;
+                    </script>       
+                    <div id="comments" class="media-block">
                         <a class="media-left" href="#">
+                       
                         
-                        @foreach ($user->comment as $comment)
-                            <div class="media-body">
+                        
+                        @foreach ($user->comment->take($countComment) as $comment)
+                            <div  class="media-body">
                                 <div class="mar-btm">
                                     <a href="#" class="btn-link text-semibold media-heading box-inline">{{ $comment->user->name }}</a>
                                     <p class="text-muted text-sm">{{ $comment->created_at }}</p>
@@ -67,29 +71,45 @@
                                 <p>{{ $comment->comment_text }}</p>
                                     
                                         <div class="container">
-                                        <div class="row">
-                                            <form action='/deleteAllComments' method="GET">
-                                                <div class="pad-ver">
-                                                    <a class="btn btn-secondary" href="#">Ответить</a>
-                                                </div>
-                                            </form>
+                                            <div class="row">
+                                                <form action='/deleteAllComments' method="GET">
+                                                    <div class="pad-ver">
+                                                        <a class="btn btn-secondary" href="#">Ответить</a>
+                                                    </div>
+                                                </form>
 
-                                            @if (($user_id === Auth::user()->id) || ($comment->user->id === Auth::user()->id))
-                                            <form action='/deleteComment/{{$comment->id}}/{{$user->id}}' method="GET">
-                                                <div class="col text-right">
-                                                <button class="btn btn-danger">Удалить</button>
-                                                </div>
-                                            </form>
-                                            @endif
+                                                @if ($comment->buttonDelete === true)
+                                                <form action='/deleteComment/{{$comment->id}}/{{$user->id}}' method="GET">
+                                                    <div class="col text-right">
+                                                    <button class="btn btn-danger">Удалить</button>
+                                                    </div>
+                                                </form>
+                                                @endif
 
-                                        </div>
+                                            </div>
                                         </div>
                                     
                                 <hr>
                             </div>
                         @endforeach
-
+                        
                     </div>
+                    
+                   
+                    
+                    <nav>
+                                <ul class="pagination">
+                                <div class="container">
+                                <div class="row">
+                                <div class="col text-center">
+                                    <li id="loaderContent" class="page-item"><a class="page-link">Загрузить ещё</a></li>
+                                </div>
+                                </div>
+                                </div>
+                                </ul>
+                    </nav>
+
+                    
 
                     </section><!-- /.container -->
 
