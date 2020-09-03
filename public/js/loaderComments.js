@@ -1,5 +1,9 @@
+showComments();
+$("#loaderContent").click(function (){
+    showComments();
+})
 
-$("#loaderContent").click(function () 
+function showComments()
 {
     $.get(
         '/loadMoreComments/' + $(".media-body").length + '/' + idUserPage, 
@@ -38,7 +42,7 @@ $("#loaderContent").click(function ()
       );
     
 
-})
+}
 
 function addComments(content)
 {
