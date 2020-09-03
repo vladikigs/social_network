@@ -12,17 +12,23 @@ function showComments()
                 var html = "";
                 html += '<div  class="media-body">' +
                                 '<div class="mar-btm">' +
-                                '<a href="#" class="btn-link text-semibold media-heading box-inline">' + data[index].username + '</a>' +
+                                '<a href="#" class="btn-link text-semibold media-heading box-inline">' + data[index].user.name + '</a>' +
                                 '<p class="text-muted text-sm">' + data[index].created_comment + '</p>' +
-                                '</div>' +
-                                '<p>' + data[index].title + '</p>' +
-                                '<p>' + data[index].comment_text + '</p>' + 
+                                '</div>'; 
+                                if (data[index].comment_id != null) {
+                                    html += '<mark>В ответ на комментарий пользователя ' + data[index].parentUsername + '</mark><br>' +
+                                            '<mark>Текст комментария:   ' + data[index].parentUserCommentText + '</mark><br><br>';
+                                }
+
+                        html += '<p>Заголовк: ' + data[index].title + '<br>' +
+                                'Комментарий: ' + data[index].comment_text + '</p>' + 
                                 
                                 '<div class="container">' +
                                     '<div class="row">' +
-                                    '<form action=\'/todo\' method="GET">' +
+                                    '<form action="/" method="GET">' +
                                     '<div class="pad-ver">' +
-                                    '<a class="btn btn-secondary" href="#">Ответить</a>' +
+                                    '<a type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-id-comment="'+ data[index].id +'" data-text-author="'+ data[index].comment_text +'" data-authorUsername="' + data[index].username + '"' +
+                                    'class="btn btn-secondary" href="#">Ответить</a>' +
                                     '</div>' +
                                     '</form>';
                                     if (data[index].buttonDelete) 
@@ -48,3 +54,15 @@ function addComments(content)
 {
     $("#comments").append(content);
 }
+
+
+$('#exampleModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var recipient = button.data('author-authorUsername');
+    var textAuthor = button.data('text-author');
+    var idComment = button.data('id-comment');
+    $('.form-request-to-comment')[0].action += 'requestToComment/' + idComment
+    var modal = $(this)
+    modal.find('.modal-title').text('Ответить на сообщение пользователя: ')
+    modal.find('.text-author-comment').text(textAuthor)
+  })

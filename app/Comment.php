@@ -30,7 +30,15 @@ class Comment extends Model
 
     public static function deleteComment($idComment)
     {
-        Comment::destroy($idComment);
+        $idCommentWall = Comment::select('user_id_wall','author_user_id')->where('id', $idComment)->get();
+
+        $idWall = $idCommentWall[0]->user_id_wall;
+        $userIdAuthor = $idCommentWall[0]->author_user_id;
+
+        if (($idWall === Auth::user()->id) || ($userIdAuthor === Auth::user()->id))
+        {
+            Comment::destroy($idComment);
+        }
     }
 
     public static function loadMoreComments($countLoadedComments, $idUserPage)
@@ -52,11 +60,29 @@ class Comment extends Model
                     $collection[$i]->buttonDelete = false;
                 }
                 $collection[$i]->created_comment = $collection[$i]->created_at->format('Y-m-d H:i:s');
-                $collection[$i]->username = $collection[$i]->user->name;
-
-               
+                $collection[$i]->user = $collection[$i]->user;
+                if (!is_null($collection[$i]->comment_id)) 
+                {
+                    $commentForResponse = Comment::where("id", $collection[$i]->comment_id)->get();
+                    $collection[$i]->parentUserCommentText = $commentForResponse[0]->comment_text;
+                    $collection[$i]->parentUsername = $commentForResponse[0]->user->name;
+                }
             }
         }
         return $collection;
+    }
+    
+    public static function requestToComment($titleComment, $textComment, $idComment)
+    {
+        $idCommentWall = Comment::select('user_id_wall')->where('id', $idComment)->get();
+        
+        $comment = new Comment;
+        $comment->title = $titleComment;
+        $comment->comment_text = $textComment;
+        $comment->author_user_id = Auth::user()->id;
+        $comment->user_id_wall = $idCommentWall[0]->user_id_wall;
+        $comment->comment_id = $idComment;
+        $comment->save();
+        return $idCommentWall[0]->user_id_wall;
     }
 }

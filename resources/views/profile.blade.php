@@ -18,7 +18,7 @@
                     @auth
 
                         <!-- форма ввода  -->
-                        <form action='/addComment/{{$user_id}}' method="POST">
+                        <form action='/addComment/{{$user->id}}' method="POST">
                         {{ csrf_field() }}
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Заголовок комментария</label>
@@ -70,7 +70,7 @@
                                 </div>
                                 </ul>
                     </nav>
-                    
+
                     <script>
                         var idUserPage =  {{ $user->id }} ;
                     </script>
@@ -81,6 +81,41 @@
                     <!-- конец комментариев -->
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ответ на комментарий</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="form-request-to-comment" action='/' method="GET">
+                <div class="modal-body">
+                    <label for="recipient-name" class="col-form-label">Комментарий пользователя:</label>
+                    <h6 class="text-author-comment"></h6>
+                    
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Заголовок:</label>
+                            <input name="titleComment" type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Сообщение:</label>
+                            <textarea name="textComment" class="form-control" id="message-text"></textarea>
+                        </div>
+                        
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                </div>
+            </form>
+            
         </div>
     </div>
 </div>

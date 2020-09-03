@@ -28,7 +28,7 @@ class ProfileController extends Controller
      */
     public function index(Int $id)
     {
-        return view('profile')->with('user_id', $id)->with('user', User::getUserData($id))->with('countComment', 5);
+        return view('profile')->with('user', User::getUserData($id));
     }
 
     
