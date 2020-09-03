@@ -63,9 +63,15 @@ class Comment extends Model
                 $collection[$i]->user = $collection[$i]->user;
                 if (!is_null($collection[$i]->comment_id)) 
                 {
-                    $commentForResponse = Comment::where("id", $collection[$i]->comment_id)->get();
-                    $collection[$i]->parentUserCommentText = $commentForResponse[0]->comment_text;
-                    $collection[$i]->parentUsername = $commentForResponse[0]->user->name;
+                    try {
+                        $commentForResponse = Comment::where("id", $collection[$i]->comment_id)->get();
+                        $collection[$i]->parentUserCommentText = $commentForResponse[0]->comment_text;
+                        $collection[$i]->parentUsername = $commentForResponse[0]->user->name;
+                    } 
+                    catch (\Throwable $th) 
+                    {
+                        $collection[$i]->comment_id = "\"Комментарий удалён\"";
+                    }
                 }
             }
         }

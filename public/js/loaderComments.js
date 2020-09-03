@@ -16,11 +16,19 @@ function showComments()
                                 '<p class="text-muted text-sm">' + data[index].created_comment + '</p>' +
                                 '</div>'; 
                                 if (data[index].comment_id != null) {
-                                    html += '<mark>В ответ на комментарий пользователя ' + data[index].parentUsername + '</mark><br>' +
+                                    if (data[index].comment_id != "\"Комментарий удалён\"") 
+                                    {
+                                        html += '<mark>В ответ на комментарий пользователя ' + data[index].parentUsername + '</mark><br>' +
                                             '<mark>Текст комментария:   ' + data[index].parentUserCommentText + '</mark><br><br>';
+                                    }
+                                    else
+                                    {
+                                        html += '<mark>Текст комментария:   \"Комментарий удалён\"</mark><br><br>';
+                                    }
+                                    
                                 }
 
-                        html += '<p>Заголовк: ' + data[index].title + '<br>' +
+                        html += '<p>Заголовок: ' + data[index].title + '<br>' +
                                 'Комментарий: ' + data[index].comment_text + '</p>' + 
                                 
                                 '<div class="container">' +
