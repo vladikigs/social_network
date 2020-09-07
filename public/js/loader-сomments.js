@@ -70,7 +70,7 @@ function checkValidAndSumbmitCommentResponce() {
     
     if (validationParams(title, text))
     {
-        $('.form-request-to-comment').submit();
+        $('.form-request-to-comment')[0].submit();
     }
 }
 
@@ -80,7 +80,6 @@ function validationParams(title, text) {
     if(title[0].value.length < 30)
     {
         title.addClass('is-valid').removeClass('is-invalid');
-
     }
     else if (title[0].value.length > 30) {
         title.addClass('is-invalid').removeClass('is-valid');
@@ -90,9 +89,8 @@ function validationParams(title, text) {
     if(text[0].value.length < 255)
     {
         text.addClass('is-valid').removeClass('is-invalid');
-
     }
-    else if (title[0].value.length > 255) {
+    else if (text[0].value.length > 255) {
         text.addClass('is-invalid').removeClass('is-valid');
         formValid = false;
     }
@@ -107,7 +105,8 @@ function checkValidAndSumbmitComment()
 
     if (validationParams(title, text))
     {
-        $('.form-create-comment').submit();
+        $('.form-create-comment')[0].submit();
+        return true;
     }
 }
 
