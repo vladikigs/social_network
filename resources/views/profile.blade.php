@@ -10,7 +10,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Это стена пользователя ') }}  {{ $user->name }}</div>
-                <script src="{{ asset('js/loaderComments.js') }}" defer></script>
+                <script src="{{ asset('js/loader-сomments.js') }}" defer></script>
                 
 
                 <div class="card-body">
@@ -18,17 +18,29 @@
                     @auth
 
                         <!-- форма ввода  -->
-                        <form action='/addComment/{{$user->id}}' method="POST">
+                        <form class="form-create-comment" action='/addComment/{{$user->id}}' onsubmit="checkValidAndSumbmitComment();return false" method="POST">
                         {{ csrf_field() }}
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Заголовок комментария</label>
-                                <input name="titleComment" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="">
-                                <small id="emailHelp" class="form-text text-muted">Введите здесь заголовок</small>
+                                <label for="title-comment">Заголовок комментария</label>
+                                <input name="titleComment" type="text" class="form-control" id="title-comment" placeholder="" required>
+                                    <div class="valid-feedback">
+                                        Всё окей
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Введите не более 30 символов
+                                    </div>
+                                <small id="commentHelp" class="form-text text-muted">Введите здесь заголовок</small>
                             </div>
                             
                             <div class="form-group">
-                                <label for="exampleTextarea">Ваш комментарий</label>
-                                <textarea name="textComment" class="form-control" id="exampleTextarea" rows="3"></textarea>
+                                <label for="Textarea">Ваш комментарий</label>
+                                <textarea name="textComment" class="form-control" id="text-comment" rows="3" required></textarea> 
+                                    <div class="valid-feedback">
+                                        Всё окей
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Введите не более 255 символов
+                                    </div>
                             </div>
                             
                             <button type="submit" class="btn btn-primary">Отправить</button>
@@ -95,18 +107,31 @@
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form class="form-request-to-comment" action='/' method="GET">
+            <form class="form-request-to-comment" onsubmit="checkValidAndSumbmitCommentResponce();return false" action='/' method="POST">
+            {{ csrf_field() }}
                 <div class="modal-body">
                     <label for="recipient-name" class="col-form-label">Комментарий пользователя:</label>
                     <h6 class="text-author-comment"></h6>
                     
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Заголовок:</label>
-                            <input name="titleComment" type="text" class="form-control" id="recipient-name">
+                            <input name="titleComment" type="text" class="form-control titleComment" id="recipient-name" required>
+                            <div class="valid-feedback">
+                                Всё окей
+                            </div>
+                            <div class="invalid-feedback">
+                                Введите не более 30 символов
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Сообщение:</label>
-                            <textarea name="textComment" class="form-control" id="message-text"></textarea>
+                            <textarea name="textComment" class="form-control textComment" id="message-text" required></textarea> 
+                            <div class="valid-feedback">
+                                Всё окей
+                            </div>
+                            <div class="invalid-feedback">
+                                Введите не более 255 символов
+                            </div>
                         </div>
                         
                 </div>

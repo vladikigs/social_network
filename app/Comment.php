@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 class Comment extends Model
 {
@@ -13,7 +12,7 @@ class Comment extends Model
        return $this->hasOne(User::class, 'id', 'author_user_id');
     }
 
-    public static function addCommentOnPage($titleComment, $textComment, $userId, $userPageId)
+    public static function addCommentOnPage($titleComment, $textComment, Int $userId, Int $userPageId)
     {
         $comment = new Comment;
         $comment->title = $titleComment;
@@ -23,69 +22,84 @@ class Comment extends Model
         $comment->save();
     }
 
-    public static function deleteAllComments($id)
+    public static function deleteAllComments(Int $id)
     {
         Comment::where('user_id_wall', $id)->delete();
     }
 
-    public static function deleteComment($idComment)
+    public static function deleteComment(Int $idComment,Int $AuthUserId)
     {
         $idCommentWall = Comment::select('user_id_wall','author_user_id')->where('id', $idComment)->get();
 
         $idWall = $idCommentWall[0]->user_id_wall;
         $userIdAuthor = $idCommentWall[0]->author_user_id;
 
-        if (($idWall === Auth::user()->id) || ($userIdAuthor === Auth::user()->id))
+        if (($idWall == $AuthUserId) || ($userIdAuthor === $AuthUserId))
         {
             Comment::destroy($idComment);
         }
     }
 
-    public static function loadMoreComments($countLoadedComments, $idUserPage)
+    public static function loadMoreComments(Int $countLoadedComments, Int $idUserPage, Int $AuthUserId)
     {
         $count = Comment::all()->where("user_id_wall", $idUserPage)->count();
         $limit = $count - ($countLoadedComments);
         
         if($limit > 0)
         {
+            $search  = array('<', '>');
+            $replace = array('&lt;', '&gt;');
+            
             $collection = Comment::skip($countLoadedComments)->take(5)->where("user_id_wall", $idUserPage)->orderBy('created_at', 'DESC')->get();
-            for ($i=0; $i < count($collection); $i++) 
-            { 
-                if (($idUserPage === Auth::user()->id) || ($collection[$i]->author_user_id === Auth::user()->id)) 
+            
+            foreach ($collection as $item) 
+            {
+                if (($idUserPage === $AuthUserId) || ($item->author_user_id === $AuthUserId)) 
                 {
-                    $collection[$i]->buttonDelete = true;
+                    $item->buttonDelete = true;
                 }
                 else
                 {
-                    $collection[$i]->buttonDelete = false;
+                    $item->buttonDelete = false;
                 }
-                $collection[$i]->created_comment = $collection[$i]->created_at->format('Y-m-d H:i:s');
-                $collection[$i]->user = $collection[$i]->user;
-                if (!is_null($collection[$i]->comment_id)) 
+                $item->created_comment = $item->created_at->format('Y-m-d H:i:s');
+                $item->user = $item->user;
+                
+                
+                $item->user->name = str_replace($search, $replace, $item->user->name);
+                $item->title = str_replace($search, $replace, $item->title);
+                $item->comment_text = str_replace($search, $replace, $item->comment_text);
+                
+                if (!is_null($item->comment_id)) 
                 {
-                    try {
-                        $commentForResponse = Comment::where("id", $collection[$i]->comment_id)->get();
-                        $collection[$i]->parentUserCommentText = $commentForResponse[0]->comment_text;
-                        $collection[$i]->parentUsername = $commentForResponse[0]->user->name;
+                    try 
+                    {
+                        $commentForResponse = Comment::where("id", $item->comment_id)->get();
+                        $item->parentUserCommentText = str_replace($search, $replace, $commentForResponse[0]->comment_text); 
+                        $item->parentUsername = str_replace($search, $replace, $commentForResponse[0]->user->name);
                     } 
                     catch (\Throwable $th) 
                     {
-                        $collection[$i]->comment_id = "\"Комментарий удалён\"";
+                        $item->comment_id = "\"Комментарий удалён\"";
                     }
                 }
             }
+            return $collection;
         }
-        return $collection;
+        else
+        {
+            return null;
+        }
     }
     
-    public static function requestToComment($titleComment, $textComment, $idComment)
+    public static function requestToComment($titleComment, $textComment, $idComment, $AuthUserId)
     {
         $idCommentWall = Comment::select('user_id_wall')->where('id', $idComment)->get();
         
         $comment = new Comment;
         $comment->title = $titleComment;
         $comment->comment_text = $textComment;
-        $comment->author_user_id = Auth::user()->id;
+        $comment->author_user_id = $AuthUserId;
         $comment->user_id_wall = $idCommentWall[0]->user_id_wall;
         $comment->comment_id = $idComment;
         $comment->save();

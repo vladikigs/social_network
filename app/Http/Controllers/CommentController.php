@@ -29,6 +29,7 @@ class CommentController extends Controller
     {
         $titleComment = $request->input('titleComment');
         $textComment = $request->input('textComment');
+
         Comment::addCommentOnPage($titleComment, $textComment, Auth::user()->id, $userPageId);
         
         return redirect()->action('ProfileController@index', ['id' => $userPageId]);
@@ -38,29 +39,25 @@ class CommentController extends Controller
     public function deleteComment($idComment, $idPageRefrash)
     {
         
-        Comment::deleteComment($idComment);
+        Comment::deleteComment($idComment, Auth::user()->id);
         return redirect()->action('ProfileController@index', ['id' => $idPageRefrash]);
     }
 
     public function deleteAllComments()
     {
-        
-        $id = Auth::user()->id;
-          
-        Comment::deleteAllComments($id);
-        return redirect()->action('ProfileController@index', ['id' => $id]);
+        Comment::deleteAllComments(Auth::user()->id);
+        return redirect()->action('ProfileController@index', ['id' => Auth::user()->id]);
     }
 
     public function loadMoreComments($countLoadedComments, $idUserPage)
     {
-        return Comment::loadMoreComments($countLoadedComments, $idUserPage);
+        return Comment::loadMoreComments($countLoadedComments, $idUserPage, Auth::user()->id);
     }
 
     public function requestToComment(Request $request, $idComment)
     {
         $titleComment = $request->input('titleComment');
-        $textComment = $request->input('textComment');
-
-        return redirect()->action('ProfileController@index', Comment::requestToComment($titleComment, $textComment, $idComment));
+        $textComment =  $request->input('textComment');
+        return redirect()->action('ProfileController@index', Comment::requestToComment($titleComment, $textComment, $idComment, Auth::user()->id));
     }
 }

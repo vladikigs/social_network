@@ -28,7 +28,16 @@ class ProfileController extends Controller
      */
     public function index(Int $id)
     {
-        return view('profile')->with('user', User::getUserData($id));
+        $user = User::getUserData($id);
+        if (!empty($user)) 
+        {
+            return view('profile')->with('user', $user);
+        }
+        else
+        {
+            abort(404);
+        }
+        
     }
 
     

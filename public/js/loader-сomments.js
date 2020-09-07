@@ -35,7 +35,7 @@ function showComments()
                                     '<div class="row">' +
                                     '<form action="/" method="GET">' +
                                     '<div class="pad-ver">' +
-                                    '<a type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-id-comment="'+ data[index].id +'" data-text-author="'+ data[index].comment_text +'" data-authorUsername="' + data[index].username + '"' +
+                                    '<a type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-id-comment="'+ data[index].id +'" data-text-author="'+ data[index].comment_text +'" data-author-username="' + data[index].user.name + '"' +
                                     'class="btn btn-secondary" href="#">Ответить</a>' +
                                     '</div>' +
                                     '</form>';
@@ -63,14 +63,64 @@ function addComments(content)
     $("#comments").append(content);
 }
 
+function checkValidAndSumbmitCommentResponce() {
+    var formGroup = $('.form-control');
+    var title = formGroup.prevObject.find('#recipient-name');
+    var text = formGroup.prevObject.find('#message-text');
+    
+    if (validationParams(title, text))
+    {
+        $('.form-request-to-comment').submit();
+    }
+}
+
+function validationParams(title, text) {
+    var formValid = true;   
+    
+    if(title[0].value.length < 30)
+    {
+        title.addClass('is-valid').removeClass('is-invalid');
+
+    }
+    else if (title[0].value.length > 30) {
+        title.addClass('is-invalid').removeClass('is-valid');
+        formValid = false;
+    }
+
+    if(text[0].value.length < 255)
+    {
+        text.addClass('is-valid').removeClass('is-invalid');
+
+    }
+    else if (title[0].value.length > 255) {
+        text.addClass('is-invalid').removeClass('is-valid');
+        formValid = false;
+    }
+    return formValid;
+}
+
+function checkValidAndSumbmitComment()
+{
+    var formGroup = $('.form-control');
+    var title = formGroup.prevObject.find('#title-comment');
+    var text = formGroup.prevObject.find('#text-comment');
+
+    if (validationParams(title, text))
+    {
+        $('.form-create-comment').submit();
+    }
+}
+
 
 $('#exampleModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget)
-    var recipient = button.data('author-authorUsername');
+    var recipient = button.data('author-username');
+    
     var textAuthor = button.data('text-author');
     var idComment = button.data('id-comment');
-    $('.form-request-to-comment')[0].action += 'requestToComment/' + idComment
+    $('.form-request-to-comment')[0].action = document.location.origin + '/requestToComment/' + idComment
     var modal = $(this)
-    modal.find('.modal-title').text('Ответить на сообщение пользователя: ')
+    modal.find('.modal-title').text('Ответить на сообщение пользователя: ' + recipient)
     modal.find('.text-author-comment').text(textAuthor)
   })
+

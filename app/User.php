@@ -47,24 +47,6 @@ class User extends Authenticatable
     public static function getUserData(Int $id)
     {
         $user = User::find($id);
-      
-        for ($i=0; $i < count($user->comment); $i++) { 
-            if (($id === Auth::user()->id) || ($user->comment[$i]->author_user_id === Auth::user()->id)) 
-            {
-                $user->comment[$i]->buttonDelete = true;
-            }
-            else
-            {
-                $user->comment[$i]->buttonDelete = false;
-            }
-            
-            
-
-        }
-        
-        
-        //dd($user->comment);
         return $user;
-        
     }
 }
