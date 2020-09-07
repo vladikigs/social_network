@@ -48,7 +48,6 @@
                         <!-- конец формы ввода  -->
 
                         
-                    @endauth
                     <!--  комментарии  -->
                     <hr>
                     <section class="container">
@@ -65,6 +64,7 @@
                         </form>
                     @endif
                     
+                    @endauth
                            
                     <div id="comments" class="media-block">
                         <a class="media-left" href="#">

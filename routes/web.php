@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Auth;
 */
 Auth::routes();
 
-Route::get('/', function () {
-        return view("welcome");
-});
+
+
+Route::get('/', 'ProfileController@getUsers');
 
 Route::get('/profile', function()
 {
@@ -24,7 +24,7 @@ Route::get('/profile', function()
         return redirect()->action('ProfileController@index', ['id' => Auth::user()->id]);
     }
     else{
-        return view("welcome");
+        return view("users-list");
     }
 });
 
@@ -39,6 +39,8 @@ Route::get('/deleteComment/{idComment}/{idPageRefrash}', 'CommentController@dele
 Route::get('/loadMoreComments/{lastCommentNum}/{idUserPage}', 'CommentController@loadMoreComments');
 
 Route::match(['get', 'post'], '/requestToComment/{idComment}', 'CommentController@requestToComment');
+
+Route::get('/myComments', 'CommentController@showAllMyComments');
 // Route::get('/home/{name?}', function ($name) {
 //     echo $name;
 //   });

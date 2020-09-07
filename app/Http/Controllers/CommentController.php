@@ -17,7 +17,7 @@ class CommentController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     /**
@@ -51,7 +51,14 @@ class CommentController extends Controller
 
     public function loadMoreComments($countLoadedComments, $idUserPage)
     {
-        return Comment::loadMoreComments($countLoadedComments, $idUserPage, Auth::user()->id);
+        if(empty(Auth::user()->id))
+        {
+            return Comment::loadMoreComments($countLoadedComments, $idUserPage);
+        }
+        else
+        {
+            return Comment::loadMoreComments($countLoadedComments, $idUserPage, Auth::user()->id);
+        }
     }
 
     public function requestToComment(Request $request, $idComment)
@@ -59,5 +66,10 @@ class CommentController extends Controller
         $titleComment = $request->input('titleComment');
         $textComment =  $request->input('textComment');
         return redirect()->action('ProfileController@index', Comment::requestToComment($titleComment, $textComment, $idComment, Auth::user()->id));
+    }
+
+    public function showAllMyComments()
+    {
+        return view('my-comments')->with('comments', Comment::getAllMyComments(Auth::user()->id));
     }
 }

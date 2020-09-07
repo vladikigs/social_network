@@ -18,7 +18,7 @@ class ProfileController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     /**
@@ -38,6 +38,12 @@ class ProfileController extends Controller
             abort(404);
         }
         
+    }
+
+    public function getUsers()
+    {
+        $users = User::all();
+        return view('users-list')->with('users', $users);
     }
 
     

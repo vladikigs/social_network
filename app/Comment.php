@@ -40,7 +40,7 @@ class Comment extends Model
         }
     }
 
-    public static function loadMoreComments(Int $countLoadedComments, Int $idUserPage, Int $AuthUserId)
+    public static function loadMoreComments(Int $countLoadedComments, Int $idUserPage, Int $AuthUserId = null)
     {
         $count = Comment::all()->where("user_id_wall", $idUserPage)->count();
         $limit = $count - ($countLoadedComments);
@@ -104,5 +104,10 @@ class Comment extends Model
         $comment->comment_id = $idComment;
         $comment->save();
         return $idCommentWall[0]->user_id_wall;
+    }
+
+    public static function getAllMyComments($myId)
+    {
+        return Comment::where('author_user_id', $myId)->orderBy('created_at', 'DESC')->get();
     }
 }
