@@ -9,12 +9,24 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-            
+                
                 <div class="card-header">{{ __('Это стена пользователя ') }}  {{ $user->name }}
                 <form class="justify-content-center"  action="/books/{{$user->id}}">
                     <button type="submit" class="btn btn-primary">Библиотека пользователя</button>
                 </form>
-                
+                @auth
+                    @if ($user->id != Auth::user()->id)
+                            @if (Session::get('accessLibrary') == '0')
+                                <form class="justify-content-center mt-2"  action="/enableOrDisableAccess/{{$user->id}}">
+                                    <button type="submit" class="btn btn-primary">Дать доступ к библиотеке</button>
+                                </form>
+                            @else
+                                <form class="justify-content-center mt-2"  action="/enableOrDisableAccess/{{$user->id}}">
+                                    <button type="submit" class="btn btn-primary">Отключить доступ к библиотеке</button>
+                                </form>
+                            @endif
+                    @endif
+                @endauth
                 </div>
                 
                 <script src="{{ asset('js/loader-сomments.js') }}" defer></script>

@@ -6,9 +6,10 @@ use App\Comment as AppComment;
 use Illuminate\Http\Request;
 use App\User;
 use App\Comment;
+use App\Book;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Str;
 class ProfileController extends Controller
 {
     /**
@@ -31,6 +32,14 @@ class ProfileController extends Controller
         $user = User::getUserData($id);
         if (!empty($user)) 
         {
+            if (!empty(Auth::user()) && Book::checkingUserAccessToLibrary(Auth::user()->id, $id) == 1) 
+            {
+                session()->flash('accessLibrary', '1'); 
+            }
+            else
+            {
+                session()->flash('accessLibrary', '0');
+            }
             return view('profile')->with('user', $user);
         }
         else
@@ -40,7 +49,7 @@ class ProfileController extends Controller
         
     }
 
-    public function getUsers()
+    public static function getUsers()
     {
         $users = User::all();
         return view('users-list')->with('users', $users);

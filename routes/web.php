@@ -28,7 +28,7 @@ Route::get('/profile', function()
     }
 });
 
-Route::get('/profile/{id}', 'ProfileController@index');
+
 
 Route::match(['get', 'post'], '/addComment/{userPageId}', 'CommentController@addComment');
 
@@ -42,10 +42,13 @@ Route::match(['get', 'post'], '/requestToComment/{idComment}', 'CommentControlle
 
 Route::get('/myComments', 'CommentController@showAllMyComments');
 
+Route::get('/profile/{id}', 'ProfileController@index');
+
 
 Route::group(['middleware' => 'is_user_lib_access'],  function()
 {
     Route::get('/books/{id}', 'BookController@index');
+
 });
 
 Route::group(['middleware' => 'is_user_book_access'],  function()
@@ -53,9 +56,21 @@ Route::group(['middleware' => 'is_user_book_access'],  function()
     Route::get('/books/read/{idBook}', 'BookController@readBook');
 });
 
+Route::group(['middleware' => 'is_user_owner_book'],  function()
+{
+    Route::get('/deleteBook/{idBook}', 'BookController@deleteBook');
+    Route::get('/editBook/{idBook}', 'BookController@openPageEditBook');
+    Route::post('/editBook/{idBook}', 'BookController@editBook');
+});
+
 Route::get('/createBook', 'BookController@openBookPage');
 
 Route::post('/createBook', 'BookController@createBook');
+
+
+
+
+Route::get('/enableOrDisableAccess/{idUser}', 'BookController@enableOrDisableAccess');
 
 // Route::get('/home/{name?}', function ($name) {
 //     echo $name;

@@ -3,7 +3,11 @@
 @section('content')
 
 <div class="container">
+    @if (Session::has('error'))
+        <div class="alert alert-danger">{{ Session::get('error') }}</div>
+    @endif
     <div class="row justify-content-center">
+        
         <h1>Пользователи</h1>
         <div class="col-md-8">
             <div class="list-group">

@@ -30,6 +30,7 @@ class CheckingAccessUserToLibrary
             }
             else 
             {
+
                 if (Book::checkingUserAccessToLibrary($request->id, $user->id) == 1) 
                 {
                     session()->flash('accessLibrary', '1'); 

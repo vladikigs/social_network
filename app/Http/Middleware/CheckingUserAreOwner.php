@@ -5,8 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use App\Book;
-
-class CheckingUserOwnerBook
+use App\User;
+use App\Http\Controllers\ProfileController;
+class CheckingUserAreOwner
 {
     /**
      * Handle an incoming request.
@@ -18,21 +19,14 @@ class CheckingUserOwnerBook
     public function handle($request, Closure $next)
     {
         $user = Auth::user();
-        if (empty($user)) {
-            //dd('guest');
+        if (Book::thisUserAreAuthorBook($request->idBook, $user->id) == 1)
+        {
             return $next($request);
         }
-        else
+        else 
         {
-            if (Book::checkingUserOwnerToBook($request->idBook, $user->id) == 1) 
-            {
-                session()->flash('accessLibrary', '1');
-            }
-            else
-            {
-                session()->flash('accessLibrary', '0');
-            }
+            session()->flash('error', 'Вы не владелец этой книги');
+            return redirect('/');
         }
-        return $next($request);
     }
 }
