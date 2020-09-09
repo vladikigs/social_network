@@ -41,6 +41,18 @@ Route::get('/loadMoreComments/{lastCommentNum}/{idUserPage}', 'CommentController
 Route::match(['get', 'post'], '/requestToComment/{idComment}', 'CommentController@requestToComment');
 
 Route::get('/myComments', 'CommentController@showAllMyComments');
+
+
+Route::group(['middleware' => 'is_user_lib_access'],  function()
+{
+    Route::get('/books/{id}', 'BookController@index');
+    Route::get('/books/read/{id}', 'BookController@readBook');
+});
+
+Route::get('/createBook', 'BookController@openBookPage');
+
+Route::post('/createBook', 'BookController@createBook');
+
 // Route::get('/home/{name?}', function ($name) {
 //     echo $name;
 //   });

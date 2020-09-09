@@ -27,6 +27,12 @@ class CommentController extends Controller
      */
     public function addComment(Request $request, $userPageId)
     {
+
+        $this->validate($request, [
+            'titleComment' => 'bail|max:30',
+            'textComment' => 'required|max:255',
+        ]);
+        
         $titleComment = $request->input('titleComment');
         $textComment = $request->input('textComment');
 
@@ -63,8 +69,14 @@ class CommentController extends Controller
 
     public function requestToComment(Request $request, $idComment)
     {
+        $this->validate($request, [
+            'titleComment' => 'bail|max:30',
+            'textComment' => 'required|max:255',
+        ]);
+
         $titleComment = $request->input('titleComment');
         $textComment =  $request->input('textComment');
+        
         return redirect()->action('ProfileController@index', Comment::requestToComment($titleComment, $textComment, $idComment, Auth::user()->id));
     }
 

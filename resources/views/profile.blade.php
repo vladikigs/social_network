@@ -9,14 +9,21 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Это стена пользователя ') }}  {{ $user->name }}</div>
+            
+                <div class="card-header">{{ __('Это стена пользователя ') }}  {{ $user->name }}
+                <form class="justify-content-center"  action="/books/{{$user->id}}">
+                    <button type="submit" class="btn btn-primary">Библиотека пользователя</button>
+                </form>
+                
+                </div>
+                
                 <script src="{{ asset('js/loader-сomments.js') }}" defer></script>
                 
 
                 <div class="card-body">
                     
                     @auth
-
+                        
                         <!-- форма ввода  -->
                         <form class="form-create-comment" action='/addComment/{{$user->id}}' onsubmit="checkValidAndSumbmitComment();return false" method="POST">
                         {{ csrf_field() }}
