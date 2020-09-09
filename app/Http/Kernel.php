@@ -53,7 +53,8 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'is_user_lib_access' => \App\Http\Middleware\CheckAccessToLibraryBooksUser::class,
+        'is_user_book_access' => \App\Http\Middleware\CheckingUserOwnerBook::class,
+        'is_user_lib_access' => \App\Http\Middleware\CheckingAccessUserToLibrary::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,

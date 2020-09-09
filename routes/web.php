@@ -46,7 +46,11 @@ Route::get('/myComments', 'CommentController@showAllMyComments');
 Route::group(['middleware' => 'is_user_lib_access'],  function()
 {
     Route::get('/books/{id}', 'BookController@index');
-    Route::get('/books/read/{id}', 'BookController@readBook');
+});
+
+Route::group(['middleware' => 'is_user_book_access'],  function()
+{
+    Route::get('/books/read/{idBook}', 'BookController@readBook');
 });
 
 Route::get('/createBook', 'BookController@openBookPage');

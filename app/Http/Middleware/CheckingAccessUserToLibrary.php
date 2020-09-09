@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use App\Book;
-class CheckAccessToLibraryBooksUser
+class CheckingAccessUserToLibrary
 {
     /**
      * Handle an incoming request.
@@ -27,17 +27,16 @@ class CheckAccessToLibraryBooksUser
             {
                 session()->flash('btnCreateBook', 'true'); 
                 session()->flash('accessLibrary', '1'); 
-                
             }
             else 
             {
-                if (Book::checkAccessToUserLibrary($request->id, $user->id) == 1) 
+                if (Book::checkingUserAccessToLibrary($request->id, $user->id) == 1) 
                 {
                     session()->flash('accessLibrary', '1'); 
                 }
                 else
                 {
-                    session()->flash('accessLibrary', '0'); 
+                    session()->flash('accessLibrary', '0');
                 }
             }
             

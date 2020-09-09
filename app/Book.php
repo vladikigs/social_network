@@ -46,9 +46,22 @@ class Book extends Model
         }
     }
 
-    public static function checkAccessToUserLibrary($userPageId, $visitorId)
+    public static function checkingUserAccessToLibrary($userPageId, $visitorId)
     {
         return AccessToTheLibrary::where("owner_id", $userPageId)->where("user_id", $visitorId)->count();
+    }
+
+    public static function checkingUserOwnerToBook($idBook, $visitorId)
+    {
+        $book = Book::find($idBook);
+        if ($book->author_user_id == $visitorId || (Book::checkingUserAccessToLibrary($book->author_user_id, $visitorId) == 1)) 
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     public function thisUserAreAuthorBook($bookId, $autorId)

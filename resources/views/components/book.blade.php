@@ -10,13 +10,14 @@
                 
 
                     @if (Session::has('btnCreateBook'))
-                    <div class="card-body">
+                    <div class="card-body pb-0">
                         <form class="justify-content-center" action="/createBook">
                             <button type="submit" class="btn btn-primary">Создать книгу</button>
                         </form>
                     </div>
                     @endif
-                    <div class="card-body">
+
+                    <div class="card-body pt-0">
                         <div class="row">
                         
                             @if (count($books) == 0 )
