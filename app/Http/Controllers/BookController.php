@@ -12,7 +12,7 @@ class BookController extends Controller
     
     public function __construct()
     {
-        $this->middleware('auth');
+        
     }
 
     public function index(Int $id)
@@ -38,7 +38,6 @@ class BookController extends Controller
     public function readBook(Int $id)
     {
         $book = Book::find($id);
-        //dd($book);
         return view('components.reader-book')->with('book', $book);
     }
 
@@ -66,5 +65,24 @@ class BookController extends Controller
         return redirect()->action('ProfileController@index', ['id' => $userId]);
     }
     
- 
+    public function shareBook(Int $bookId)
+    {
+        Book::shareBook($bookId);
+        return redirect()->action('BookController@readBook', ['idBook' => $bookId]);
+    }
+    
+    public function openBookToUrl(String $urlCode)
+    {
+        $book = Book::openBookToShareUrl($urlCode);
+        if (!empty($book[0])) 
+        {
+            session()->flash('accessLibrary', '1');
+            return view('components.reader-book')->with('book', $book[0]);
+        }
+        else
+        {
+            session()->flash('error', 'Книга не найдена');
+            return redirect('/');
+        }
+    }
 }

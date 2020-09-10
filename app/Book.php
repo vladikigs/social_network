@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\AccessToTheLibrary;
+use Illuminate\Support\Str;
 
 class Book extends Model
 {
@@ -34,9 +35,9 @@ class Book extends Model
         Book::where('id', $bookId)->update(['name' => $newName, 'text' => $newText]);
     }
 
-    public static function shareBookToUrl($bookId, $autorId)
+    public static function openBookToShareUrl($shareText)
     {
-        
+        return Book::where('url_access', $shareText)->get();
     }
 
     public static function checkingUserAccessToLibrary(Int $userPageId, Int $visitorId)
@@ -99,6 +100,12 @@ class Book extends Model
         }
     }
     
+    public static function shareBook(Int $bookId)
+    {
+        $newUrl = Str::random(20);
+        Book::where('id', $bookId)->update(['url_access' => $newUrl]);
+        return $newUrl;
+    }
 
 
 }

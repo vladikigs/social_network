@@ -17,20 +17,23 @@ class CheckingAccessUserBook
      */
     public function handle($request, Closure $next)
     {
-        $user = Auth::user();
-        if (empty($user)) {
-            //dd('guest');
-            return $next($request);
+        if (strlen($request->idBook) == 20) 
+        {
+            session()->flash('accessLibrary', '1');
+            return redirect()->action('BookController@openBookToUrl', ['urlCode' => $request->idBook]); 
         }
-        else
+
+        $user = Auth::user();
+        if (!empty($user)) 
         {
             if (Book::checkingUserAccessToBook($request->idBook, $user->id) == 1) 
             {
                 session()->flash('accessLibrary', '1');
             }
-            else
+            
+            if (Book::thisUserAreAuthorBook($request->idBook, $user->id) == 1)
             {
-                session()->flash('accessLibrary', '0');
+                session()->flash('owner', '1');
             }
         }
         return $next($request);

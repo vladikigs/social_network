@@ -17,11 +17,7 @@ class CheckingAccessUserToLibrary
     public function handle($request, Closure $next )
     {
         $user = Auth::user();
-        if (empty($user)) {
-            //dd('guest');
-            return $next($request);
-        }
-        else
+        if (!empty($user)) 
         {
             if ($user->id == $request->id) 
             {
@@ -40,8 +36,7 @@ class CheckingAccessUserToLibrary
                     session()->flash('accessLibrary', '0');
                 }
             }
-            
-            return $next($request);
         }
+        return $next($request);
     }
 }

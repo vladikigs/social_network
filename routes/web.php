@@ -56,11 +56,14 @@ Route::group(['middleware' => 'is_user_book_access'],  function()
     Route::get('/books/read/{idBook}', 'BookController@readBook');
 });
 
+Route::get('/books/readToUrl/{urlCode}', 'BookController@openBookToUrl');
+
 Route::group(['middleware' => 'is_user_owner_book'],  function()
 {
     Route::get('/deleteBook/{idBook}', 'BookController@deleteBook');
     Route::get('/editBook/{idBook}', 'BookController@openPageEditBook');
     Route::post('/editBook/{idBook}', 'BookController@editBook');
+    Route::get('/shareBook/{idBook}', 'BookController@shareBook');
 });
 
 Route::get('/createBook', 'BookController@openBookPage');
@@ -72,6 +75,3 @@ Route::post('/createBook', 'BookController@createBook');
 
 Route::get('/enableOrDisableAccess/{idUser}', 'BookController@enableOrDisableAccess');
 
-// Route::get('/home/{name?}', function ($name) {
-//     echo $name;
-//   });
